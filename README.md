@@ -50,6 +50,27 @@ because patient data would then pass through a server.
 The handler is in `src/assets/site.js`; the clinic number is the
 `CLINIC_NUMBER` constant there and in the `wa.me` links in `src/layout.html`.
 
+## Why booking has no live availability
+
+Considered and deliberately declined, September 2026. A booking service
+(Cal.com, Zoho Bookings) would prevent two patients requesting the same slot.
+It was not adopted for three reasons, the third being the important one:
+
+1. Website availability is only true if the website *is* the clinic diary.
+   Phone bookings and walk-ins would diverge from it within days.
+2. Patient name, number and reason for visiting would move to a third-party
+   processor. The privacy notice currently says, accurately, that nothing is
+   collected at all.
+3. **Auto-confirmation has a clinical cost here.** Patients must stop
+   antihistamines five days before allergy testing. The current flow lets the
+   clinic see the request and say "not tomorrow -- stop your cetirizine and
+   come Monday". A system that confirms automatically books them in while
+   still medicated, and the test is unreadable.
+
+The problem actually being solved is two people wanting the same slot, which
+the clinic already resolves in its WhatsApp reply. Revisit if collisions
+become weekly rather than occasional.
+
 ## Policies
 
 `/privacy/` and `/terms/` are linked from the footer of every page. They
