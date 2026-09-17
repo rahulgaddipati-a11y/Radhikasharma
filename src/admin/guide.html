@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>How to use the editor · Dr. Radhika's Allergy &amp; Lung Clinic</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+  /* The palette and type here mirror src/assets/site.css. The public
+     stylesheet is not reused: it is content-hashed at build time, and this
+     page must keep working even if that hash changes. */
+  :root{
+    --ground:#FDFBF7; --paper:#FFFFFF; --band:#F5F1E8;
+    --rule:#E6E0D4; --muted:#6C6559; --body:#453F36; --ink:#26221B;
+    --accent:#5B7150; --accent-tint:#EBF0E4; --alert:#8E3520; --alert-bg:#FBF0EA;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--body);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:16.5px;-webkit-text-size-adjust:100%}
+  .wrap{max-width:50rem;margin:0 auto;padding:48px 24px 96px}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;color:var(--ink);
+    line-height:1.25;margin:0 0 12px}
+  h1{font-size:2.1rem}
+  h2{font-size:1.5rem;margin-top:52px;padding-top:26px;border-top:1px solid var(--rule)}
+  h3{font-size:1.15rem;margin-top:30px}
+  p{margin:0 0 16px}
+  .lede{font-size:1.1rem;color:var(--muted);margin-bottom:8px}
+  ol,ul{margin:0 0 16px;padding-left:22px}
+  li{margin-bottom:8px}
+  figure{margin:24px 0 28px}
+  figure img{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:3px;
+    background:var(--paper)}
+  figcaption{font-size:14px;color:var(--muted);margin-top:10px}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:0.9em;
+    background:var(--band);padding:1px 5px;border-radius:2px}
+  .note{background:var(--accent-tint);border-left:3px solid var(--accent);
+    padding:16px 18px;margin:24px 0;border-radius:0 3px 3px 0}
+  .warn{background:var(--alert-bg);border-left:3px solid var(--alert);
+    padding:16px 18px;margin:24px 0;border-radius:0 3px 3px 0}
+  .note p:last-child,.warn p:last-child{margin-bottom:0}
+  table{border-collapse:collapse;width:100%;margin:20px 0;font-size:15px}
+  th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--rule)}
+  th{color:var(--ink);font-weight:600;white-space:nowrap}
+  .back{display:inline-block;margin-bottom:28px;color:var(--accent);text-decoration:none;
+    font-size:14px;font-weight:500}
+  .back:hover{text-decoration:underline}
+  .toc{background:var(--paper);border:1px solid var(--rule);border-radius:3px;padding:18px 22px;margin:28px 0 8px}
+  .toc ol{margin:0;padding-left:20px}
+  .toc li{margin-bottom:5px}
+  .toc a{color:var(--body)}
+  footer{margin-top:56px;padding-top:22px;border-top:1px solid var(--rule);
+    font-size:14px;color:var(--muted)}
+  @media (max-width:640px){ .wrap{padding:32px 18px 72px} h1{font-size:1.7rem} body{font-size:16px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="back" href="/admin/">← Back to the editor</a>
+
+<h1>How to use the editor</h1>
+<p class="lede">Everything you need to write a Knowledge article and get it
+published, in the order you will actually need it.</p>
+
+<div class="toc">
+  <ol>
+    <li><a href="#signing-in">Signing in</a></li>
+    <li><a href="#tabs">The tabs along the top</a></li>
+    <li><a href="#writing">Writing an article</a></li>
+    <li><a href="#fields">What each field is for</a></li>
+    <li><a href="#publishing">Saving, reviewing, publishing</a></li>
+    <li><a href="#images">Adding images</a></li>
+    <li><a href="#trouble">If something goes wrong</a></li>
+  </ol>
+</div>
+
+<h2 id="signing-in">1. Signing in</h2>
+
+<p>The editor lives at <code>/admin/</code> on the clinic's website. Nothing on
+the public site links to it, so bookmark it the first time you visit.</p>
+
+<p>You will see a single button, <strong>Login with Netlify Identity</strong>.
+Use the email address your invitation was sent to, and the password you set
+when you accepted it. There is no second login screen after that — if you find
+yourself looking at a login button again, you are not signed in yet.</p>
+
+<div class="note">
+  <p>Lost your password? Use the link on the sign-in dialog. The reset email
+  arrives from Netlify, not from the clinic, so check your spam folder.</p>
+</div>
+
+<h2 id="tabs">2. The tabs along the top</h2>
+
+<figure>
+  <img src="guide-contents.webp" alt="The Contents tab, listing the Knowledge
+       articles currently on the site" width="1360" height="720" loading="lazy">
+  <figcaption>The Contents tab. Every article already on the site is listed
+  here; the dark button at the top right starts a new one.</figcaption>
+</figure>
+
+<ul>
+  <li><strong>Contents</strong> — everything that is already published. Click
+    any title to edit it.</li>
+  <li><strong>Workflow</strong> — articles you have started but not yet put
+    live. This is where work in progress sits.</li>
+  <li><strong>Media</strong> — every image that has been uploaded, so you can
+    reuse one instead of uploading it twice.</li>
+  <li><strong>How to use</strong> — this page. It opens in a new tab, so you
+    will not lose anything you are part-way through writing.</li>
+</ul>
+
+<p>On the left, <strong>Collections</strong> lists what you are allowed to
+edit. There is one entry, <strong>Knowledge articles</strong>, and that is
+deliberate. The service pages, the prices, the contact details and the booking
+form are not editable here — changing those needs a developer, which means you
+cannot break them by accident.</p>
+
+<h2 id="writing">3. Writing an article</h2>
+
+<p>Press <strong>+ article</strong> on the Contents tab. The screen splits in
+two: the form on the left, and a live preview of the finished page on the
+right, which updates as you type.</p>
+
+<figure>
+  <img src="guide-fields.webp" alt="The article editor, with the form on the
+       left and a live preview on the right" width="1360" height="940" loading="lazy">
+  <figcaption>The editor. Grey text under each box explains what that field is
+  for — it is worth reading the first few times.</figcaption>
+</figure>
+
+<p>Work down the form. Every field except the ones marked
+<strong>(optional)</strong> has to be filled in before the article can be
+saved; if you press Save and nothing happens, scroll up and look for the box
+outlined in red.</p>
+
+<p>The <strong>Article</strong> box at the bottom is where the writing goes.
+Use <strong>Heading 2</strong> for sections and <strong>Heading 3</strong>
+beneath them. Plain prose reads best here — the site is written to sound like a
+doctor explaining something, not like marketing copy.</p>
+
+<h2 id="fields">4. What each field is for</h2>
+
+<table>
+  <tr><th>Title</th><td>The headline on the page and in Google results.</td></tr>
+  <tr><th>Web address</th><td>Becomes <code>/knowledge/your-slug/</code>.
+    Lower case and hyphens only.</td></tr>
+  <tr><th>Publication date</th><td>Used for ordering and for search engines.
+    Press <strong>Now</strong> for today.</td></tr>
+  <tr><th>Last updated</th><td>Shown under the title, written out in full —
+    for example 17 September 2026.</td></tr>
+  <tr><th>Byline</th><td>Shown on the Knowledge index card.</td></tr>
+  <tr><th>Search description</th><td>The sentence Google shows beneath the
+    title, and the one that appears when the link is shared on WhatsApp.
+    Roughly 120–160 characters; shorter or longer will be refused.</td></tr>
+  <tr><th>Category</th><td>Which of the five groups the article belongs to.</td></tr>
+  <tr><th>Filter tags</th><td>Which filter buttons the article appears under on
+    the Knowledge page. You can pick more than one.</td></tr>
+  <tr><th>Index summary</th><td>The paragraph shown on the Knowledge index.
+    Two or three sentences.</td></tr>
+  <tr><th>Feature at the top</th><td>Lifts the article to the top of the
+    Knowledge page.</td></tr>
+  <tr><th>In a nutshell</th><td>Optional. The summary box at the top of the
+    article — four or five short points.</td></tr>
+  <tr><th>Buttons at the end</th><td>Optional. Give every button you add a
+    label, or the article cannot be saved.</td></tr>
+  <tr><th>Sources</th><td>Optional. Guidelines or published research the
+    article draws on.</td></tr>
+</table>
+
+<div class="warn">
+  <p><strong>Two things that are hard to undo.</strong></p>
+  <p><strong>The web address is permanent.</strong> Once an article is live,
+  people and search engines have that link. Changing it later breaks every one
+  of them. Get it right before publishing, and leave it alone afterwards.</p>
+  <p><strong>Only one article should be featured.</strong> If several are
+  switched on, the newest one wins and the others quietly stop being featured —
+  so switch the old one off when you promote a new one.</p>
+</div>
+
+<h2 id="publishing">5. Saving, reviewing, publishing</h2>
+
+<p><strong>Saving does not put anything on the website.</strong> It files the
+article away as work in progress, and it is safe to do as often as you like.
+Saved articles appear on the <strong>Workflow</strong> tab.</p>
+
+<figure>
+  <img src="guide-workflow.webp" alt="The Workflow board with three columns:
+       Drafts, In Review and Ready" width="1360" height="560" loading="lazy">
+  <figcaption>The Workflow board. Drag a card between columns, or change its
+  status from inside the article.</figcaption>
+</figure>
+
+<p>Each article sits in one of three columns, and you move it along as it
+progresses:</p>
+
+<ol>
+  <li><strong>Drafts</strong> — still being written.</li>
+  <li><strong>In Review</strong> — finished, and waiting for someone to read
+    it.</li>
+  <li><strong>Ready</strong> — approved, and waiting to go live.</li>
+</ol>
+
+<p>When an article is genuinely ready, open it and press
+<strong>Publish</strong>. That is the moment it goes on the website. It takes
+a minute or two to appear, because the site is rebuilt each time.</p>
+
+<div class="warn">
+  <p><strong>Publish is live, immediately and for everyone.</strong> The three
+  columns are a way of keeping track of work, not a lock — the editor will not
+  stop you publishing something nobody else has read.</p>
+  <p>Every article carries Dr. Radhika's name and medical registration number.
+  Please leave anything clinical in <strong>In Review</strong> until she has
+  read it.</p>
+</div>
+
+<h2 id="images">6. Adding images</h2>
+
+<p>Drag an image straight into the Article box, or use the <strong>+</strong>
+button in the editor toolbar. It is uploaded with the article and stored in the
+site's media library, so you can reuse it later from the
+<strong>Media</strong> tab.</p>
+
+<p>Photographs of patients need written consent before they go anywhere near
+the site. If you are not certain consent exists, do not upload the picture.</p>
+
+<h2 id="trouble">7. If something goes wrong</h2>
+
+<p>If the editor does not finish loading, wait about ten seconds. Rather than
+spinning forever, the page will print a short report saying exactly what
+failed. Copy that text and send it to whoever looks after the site — it is far
+more useful than a screenshot of a blank page.</p>
+
+<p>If you are signed in but nothing saves, you have most likely missed a
+required field. Scroll to the top of the article and look for the red outline.</p>
+
+<footer>
+  This page is part of the editor and is not visible on the public website.
+  If something here no longer matches what you see on screen, say so — the
+  guide is meant to be corrected.
+</footer>
+
+</div>
+</body>
+</html>
