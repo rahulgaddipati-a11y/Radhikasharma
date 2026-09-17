@@ -7,25 +7,19 @@
 <title>Editor · Dr. Radhika's Allergy &amp; Lung Clinic</title>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <style>
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    background:#FDFBF7;color:#453F36}
-  .gate{max-width:34rem;margin:12vh auto;padding:0 24px;line-height:1.6}
-  .gate h1{font-family:Georgia,serif;font-weight:400;font-size:1.8rem;color:#26221B;margin:0 0 14px}
-  .gate p{margin:0 0 14px}
-  .gate button{font:inherit;font-weight:500;background:#5B7150;color:#FDFBF7;border:none;
-    border-radius:2px;padding:12px 22px;cursor:pointer}
-  .gate small{display:block;margin-top:28px;color:#6C6559;font-size:13px}
-
   /* Shown only if the editor fails to start. Without it a failure looks like a
      spinner that never stops, which tells nobody anything. */
   #diag{position:fixed;inset:0;z-index:99999;overflow:auto;background:#FDFBF7;
-    padding:32px 24px;line-height:1.6}
+    color:#453F36;padding:32px 24px;line-height:1.6;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
   #diag .in{max-width:46rem;margin:0 auto}
   #diag h2{font-family:Georgia,serif;font-weight:400;font-size:1.5rem;color:#26221B;margin:0 0 12px}
   #diag p{margin:0 0 14px}
   #diag pre{background:#26221B;color:#F3EEE4;padding:16px;border-radius:3px;
     font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;
     -webkit-user-select:text;user-select:text}
+  #diag button{font:inherit;font-weight:500;background:#5B7150;color:#FDFBF7;
+    border:none;border-radius:2px;padding:12px 22px;cursor:pointer}
 </style>
 <!-- Identity and the CMS are loaded only on this page. The public site makes no
      third-party request other than its webfonts, and the privacy notice says so. -->
@@ -47,35 +41,20 @@
 </head>
 <body>
 
-<div class="gate" id="gate">
-  <h1>Clinic editor</h1>
-  <p>Sign in to write and edit articles for the Knowledge section.</p>
-  <p><button type="button" id="login">Sign in</button></p>
-  <small>
-    Anything you save here is sent to Dr. Radhika for approval — it does not go
-    on the live website until she publishes it.
-  </small>
-</div>
-
 <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
 <script>
   (function () {
-    var gate = document.getElementById('gate');
-    var identity = window.netlifyIdentity;
-
-    if (identity) {
-      document.getElementById('login').addEventListener('click', function () {
-        identity.open('login');
-      });
-      identity.on('init', function (user) {
-        if (user) gate.hidden = true;
-      });
-      identity.on('login', function () {
-        gate.hidden = true;
-        document.location.reload();
-      });
-      identity.on('logout', function () {
-        gate.hidden = false;
+    // Decap draws its own "Login with Netlify Identity" screen and owns the
+    // whole sign-in flow. This page must not put a second gate in front of it:
+    // two competing logins, the second one reloading the page on success, is
+    // what made signing in appear to loop back to the start.
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', function (user) {
+        if (!user) {
+          window.netlifyIdentity.on('login', function () {
+            document.location.href = '/admin/';
+          });
+        }
       });
     }
 
@@ -120,9 +99,8 @@
         '<p>Nothing is broken on the public website — this page only.</p>' +
         '<p>Please send the text below to whoever set this up; it says exactly ' +
         'what failed.</p><pre></pre>' +
-        '<p style="margin-top:18px"><button type="button" onclick="location.reload()" ' +
-        'style="font:inherit;font-weight:500;background:#5B7150;color:#FDFBF7;border:none;' +
-        'border-radius:2px;padding:12px 22px;cursor:pointer">Try again</button></p></div>';
+        '<p style="margin-top:18px"><button type="button" ' +
+        'onclick="location.reload()">Try again</button></p></div>';
       d.querySelector('pre').textContent = report;
       document.body.appendChild(d);
     }, 9000);
