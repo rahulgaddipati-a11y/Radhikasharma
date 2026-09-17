@@ -9,6 +9,7 @@ canonical and structured data.
     python3 build.py --serve    # build, then serve dist/ on :8000
 """
 
+import glob
 import hashlib
 import json
 import os
@@ -169,50 +170,87 @@ P = [
      "/contact/"),
 ]
 
-# url path, fragment, title, description, ISO date  (all under /knowledge/)
-ARTICLES = [
-    ("/knowledge/dust-allergy/", "knowledge-dust-allergy",
-     "Is it dust allergy, or something else? · Knowledge",
-     "“Dust allergy” is a folk category, not a diagnosis — at least five different things hide "
-     "behind it, and the treatments diverge completely. How to tell them apart.",
-     "2026-09-08"),
+POSTS = "src/posts"
 
-    ("/knowledge/igg-tests/", "knowledge-igg-tests",
-     "The food intolerance blood test you paid for doesn't work · Knowledge",
-     "IgG food intolerance panels sold in India are not validated tests. What the antibody actually "
-     "means, why the result looks convincing, and what to do instead.",
-     "2026-09-02"),
 
-    ("/knowledge/homeopathy/", "knowledge-homeopathy",
-     "Homeopathy, Ayurveda and allergy: an honest answer · Knowledge",
-     "An honest answer on homeopathy and Ayurveda for allergy, from a doctor asked it every week — "
-     "what the evidence shows, and where the real harm comes from.",
-     "2026-08-24"),
+def load_posts():
+    """Read src/posts/*.md -- front matter plus Markdown body.
 
-    ("/knowledge/post-tb/", "knowledge-post-tb",
-     "You finished TB treatment. Why are you still breathless? · Knowledge",
-     "Breathless after completing TB treatment? Post-TB lung disease is common, under-recognised "
-     "and treatable. Why curing the infection is not always the end of it.",
-     "2026-08-12"),
+    One file is one article. Nothing else needs editing to publish: the page,
+    its entry on the Knowledge index, the sitemap and the structured data are
+    all produced from here.
+    """
+    import markdown as md_lib
+    import yaml
 
-    ("/knowledge/child-nebuliser/", "knowledge-child-nebuliser",
-     "Should my child be on a preventer inhaler? · Knowledge",
-     "Your child has been nebulised three times this year. When a preventer inhaler is the right "
-     "answer, why inhaled steroids worry parents, and what the risks actually are.",
-     "2026-07-30"),
+    posts = []
+    for path in sorted(glob.glob(os.path.join(POSTS, "*.md"))):
+        raw = open(path, encoding="utf-8").read()
+        if not raw.startswith("---"):
+            raise SystemExit("%s is missing its front matter block" % path)
+        _, front, body = raw.split("---", 2)
+        post = yaml.safe_load(front) or {}
 
-    ("/knowledge/parthenium/", "knowledge-parthenium",
-     "Congress grass (Parthenium): rash as well as sneezing · Knowledge",
-     "Congress grass (Parthenium) causes an itchy rash as well as sneezing, and the contact "
-     "dermatitis is often missed. Season, pattern and treatment in Hyderabad.",
-     "2026-07-18"),
+        missing = [k for k in ("slug", "title", "description", "date", "card_label",
+                               "card_summary") if not post.get(k)]
+        if missing:
+            raise SystemExit("%s is missing: %s" % (path, ", ".join(missing)))
 
-    ("/knowledge/monsoon-asthma/", "knowledge-monsoon-asthma",
-     "Monsoon asthma in Hyderabad · Knowledge",
-     "Why June to September is the hardest season for Hyderabad lungs — mould, dust mite, "
-     "thunderstorm asthma and viral surges, and how to get ahead of it.",
-     "2026-06-26"),
-]
+        # no "smarty": converting the storage format must not quietly restyle
+        # the doctor's punctuation
+        post["html"] = md_lib.markdown(
+            body.strip(), extensions=["extra", "sane_lists"])
+        post["path"] = "/knowledge/%s/" % post["slug"]
+        post["source"] = path
+        posts.append(post)
+
+    slugs = [p["slug"] for p in posts]
+    if len(slugs) != len(set(slugs)):
+        raise SystemExit("two posts share a slug")
+    posts.sort(key=lambda p: p["date"], reverse=True)
+    return posts
+
+
+def render_article(post):
+    """Assemble one article from its front matter and Markdown body."""
+    out = ['<section class="first"><div class="wrap">',
+           '  <div class="prose" style="max-width:74ch">',
+           '    <p class="crumb"><a href="/knowledge/">Knowledge</a> \u203a %s</p>'
+           % esc_text(post["card_label"]),
+           '    <h1 style="font-size:clamp(2rem,4.4vw,3rem);margin-top:16px">%s</h1>'
+           % post["title"],
+           '    <p class="artmeta">Dr. Radhika Sharma, MD (Respiratory Medicine), '
+           'D.A.A (CMC Vellore) \u00b7 <b>Last updated %s</b></p>' % esc_text(post["updated"])]
+
+    if post.get("nutshell"):
+        out.append('    <div class="nutshell">')
+        out.append('      <span class="eyebrow">In a nutshell</span>')
+        out.append("      <ul>")
+        out += ["        <li>%s</li>" % b for b in post["nutshell"]]
+        out.append("      </ul>")
+        out.append("    </div>")
+    out.append("  </div>")
+    out.append("</div></section>")
+
+    out.append('<section><div class="wrap"><div class="prose" style="max-width:74ch">')
+    out.append(post["html"])
+
+    if post.get("cta"):
+        out.append('  <div class="cta-row" style="margin-top:40px">')
+        for c in post["cta"]:
+            cls = "btn ghost" if c.get("style") == "ghost" else "btn"
+            out.append('    <a class="%s" href="%s">%s</a>' % (cls, c["href"], c["label"]))
+        out.append("  </div>")
+
+    out.append('  <div class="refs">')
+    out.append("    <h4>Sources</h4>")
+    for r in post.get("sources", []):
+        out.append("    <p>%s</p>" % r)
+    out.append('    <p style="margin-top:12px">General information, not a substitute for '
+               "consultation. Reviewed by Dr. Radhika Sharma, September 2026.</p>")
+    out.append("  </div>")
+    out.append("</div></div></section>")
+    return "\n".join(out)
 
 
 def fingerprint_assets():
@@ -235,6 +273,11 @@ def fingerprint_assets():
         os.rename(path, os.path.join(out_dir, hashed))
         renamed["/assets/" + name] = "/assets/" + hashed
     return renamed
+
+
+def esc_text(s):
+    """Escape text destined for HTML content (not an attribute)."""
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def esc(s):
@@ -296,8 +339,56 @@ def mark_nav(html, section):
     return re.sub(r'<a href="(/[\w/-]*)">', sub, html)
 
 
-def render(layout, path, frag, title, desc, section, art_date=None):
-    body = open(os.path.join(PAGES, frag + ".html"), encoding="utf-8").read()
+FEATURE_ART = ('<div class="art"><svg width="150" height="150" viewBox="0 0 150 150" '
+    'fill="none" aria-hidden="true"><circle cx="75" cy="75" r="52" stroke="#5B7150" '
+    'stroke-width="1" opacity=".5"/><circle cx="75" cy="75" r="34" stroke="#5B7150" '
+    'stroke-width="1" opacity=".7"/><circle cx="75" cy="75" r="16" fill="#5B7150" '
+    'opacity=".18"/><circle cx="46" cy="58" r="3" fill="#5B7150"/><circle cx="104" cy="63" '
+    'r="4" fill="#5B7150" opacity=".7"/><circle cx="92" cy="103" r="2.5" fill="#5B7150"/>'
+    '<circle cx="55" cy="98" r="3.5" fill="#5B7150" opacity=".6"/></svg></div>')
+
+
+def knowledge_cards(posts):
+    """The Knowledge index, built from the posts themselves.
+
+    Publishing is one file in src/posts/: the article page, this listing entry,
+    the sitemap and the structured data all follow from it.
+    """
+    feature = next((p for p in posts if p.get("featured")), posts[0] if posts else None)
+    out = []
+
+    if feature:
+        out.append('<a class="feature" href="%s" data-cat="%s">'
+                   % (feature["path"], " ".join(feature.get("tags", []))))
+        out.append("  " + FEATURE_ART)
+        out.append('  <div class="body">')
+        out.append('    <span class="cat">%s</span>' % esc_text(feature["card_label"]))
+        out.append("    <h3>%s</h3>" % feature["title"])
+        out.append("    <p>%s</p>" % feature["card_summary"])
+        out.append('    <p class="artmeta" style="margin-top:22px">%s</p>'
+                   % (feature.get("byline") or "Dr. Radhika Sharma"))
+        out.append("  </div>")
+        out.append("</a>")
+
+    rest = [p for p in posts if p is not feature]
+    if rest:
+        out.append('<div class="cards" id="cards">')
+        for post in rest:
+            out.append('  <a class="card" href="%s" data-cat="%s">'
+                       % (post["path"], " ".join(post.get("tags", []))))
+            out.append('    <span class="cat">%s</span>' % esc_text(post["card_label"]))
+            out.append("    <h3>%s</h3>" % post["title"])
+            out.append("    <p>%s</p>" % post["card_summary"])
+            out.append('    <span class="meta">%s</span>'
+                       % (post.get("byline") or "Dr. Radhika Sharma"))
+            out.append("  </a>")
+        out.append("</div>")
+    return "\n".join(out)
+
+
+def render(layout, path, frag, title, desc, section, art_date=None, body=None):
+    if body is None:
+        body = open(os.path.join(PAGES, frag + ".html"), encoding="utf-8").read()
     canonical = SITE + path
     html = layout
     for key, val in [
@@ -376,15 +467,23 @@ def main():
     for plain, hashed in fingerprint_assets().items():
         layout = layout.replace(plain, hashed)
 
+    posts = load_posts()
+
     written = []
     for path, frag, title, desc, section in P:
-        out, n = render(layout, path, frag, title, desc, section)
+        page_body = None
+        if frag == "knowledge":
+            page_body = open(os.path.join(PAGES, "knowledge.html"), encoding="utf-8") \
+                .read().replace("<!-- POSTS -->", knowledge_cards(posts))
+        out, n = render(layout, path, frag, title, desc, section, body=page_body)
         written.append(path)
         print("  %-34s %6d  %s" % (path, n, out))
-    for path, frag, title, desc, art_date in ARTICLES:
-        out, n = render(layout, path, frag, title, desc, "/knowledge/", art_date)
-        written.append(path)
-        print("  %-34s %6d  %s" % (path, n, out))
+    for post in posts:
+        out, n = render(layout, post["path"], None,
+                        post["title"] + " \u00b7 Knowledge", post["description"],
+                        "/knowledge/", post["date"], body=render_article(post))
+        written.append(post["path"])
+        print("  %-34s %6d  %s" % (post["path"], n, out))
 
     write_extras(written)
 

@@ -23,6 +23,45 @@ python3 build.py --serve    # builds, then serves it on http://localhost:8000
 
 No dependencies beyond the Python standard library.
 
+## Writing a post
+
+Posts live in `src/posts/` as Markdown, one file per article. Adding a file is
+all that is needed to publish: the page, its card on the Knowledge index, the
+sitemap entry and the structured data are all generated from it.
+
+The front matter carries the furniture; the body is ordinary Markdown:
+
+```
+---
+slug: "dust-allergy"          # becomes /knowledge/dust-allergy/
+date: "2026-09-08"            # ISO, used for ordering and structured data
+updated: "8 September 2026"   # shown under the title
+title: "Is it dust allergy, or something else?"
+description: "..."            # the Google result and the WhatsApp card
+card_label: "Living in Hyderabad"
+card_summary: "..."           # the blurb on the Knowledge index
+byline: "Dr. Radhika Sharma · 8 September 2026"
+tags: [hyderabad, allergy]    # drives the category filter
+featured: true                # optional; one post leads the index
+nutshell:                     # optional "in a nutshell" box
+  - "A point."
+cta:                          # optional buttons at the end
+  - label: "Book allergy testing"
+    href: "/book/"
+    style: solid              # or ghost
+sources:                      # optional reference list
+  - "A citation."
+---
+
+## An ordinary heading
+
+Body text in Markdown. Inline HTML is allowed, which is how the pull quotes
+and callout boxes in the existing articles are kept.
+```
+
+The build fails loudly if a post is missing a required field or two posts share
+a slug, so a broken post never reaches the site.
+
 ## Editing content
 
 Page text lives in `src/pages/`. To change the immunotherapy page, edit
