@@ -15,10 +15,35 @@
   .gate button{font:inherit;font-weight:500;background:#5B7150;color:#FDFBF7;border:none;
     border-radius:2px;padding:12px 22px;cursor:pointer}
   .gate small{display:block;margin-top:28px;color:#6C6559;font-size:13px}
+
+  /* Shown only if the editor fails to start. Without it a failure looks like a
+     spinner that never stops, which tells nobody anything. */
+  #diag{position:fixed;inset:0;z-index:99999;overflow:auto;background:#FDFBF7;
+    padding:32px 24px;line-height:1.6}
+  #diag .in{max-width:46rem;margin:0 auto}
+  #diag h2{font-family:Georgia,serif;font-weight:400;font-size:1.5rem;color:#26221B;margin:0 0 12px}
+  #diag p{margin:0 0 14px}
+  #diag pre{background:#26221B;color:#F3EEE4;padding:16px;border-radius:3px;
+    font-size:12.5px;line-height:1.5;white-space:pre-wrap;word-break:break-word;
+    -webkit-user-select:text;user-select:text}
 </style>
 <!-- Identity and the CMS are loaded only on this page. The public site makes no
      third-party request other than its webfonts, and the privacy notice says so. -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  // Capture failures from the very first moment, before either third-party
+  // script has run. Anything that arrives later is appended to the same log.
+  window.__diag = [];
+  window.addEventListener('error', function (e) {
+    window.__diag.push('error: ' + (e.message || e.type) +
+      (e.filename ? '\n  at ' + e.filename + ':' + e.lineno : ''));
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e.reason;
+    window.__diag.push('unhandled rejection: ' +
+      (r && (r.stack || r.message) ? (r.stack || r.message) : String(r)));
+  });
+</script>
 </head>
 <body>
 
@@ -37,22 +62,70 @@
   (function () {
     var gate = document.getElementById('gate');
     var identity = window.netlifyIdentity;
-    if (!identity) return;
 
-    document.getElementById('login').addEventListener('click', function () {
-      identity.open('login');
+    if (identity) {
+      document.getElementById('login').addEventListener('click', function () {
+        identity.open('login');
+      });
+      identity.on('init', function (user) {
+        if (user) gate.hidden = true;
+      });
+      identity.on('login', function () {
+        gate.hidden = true;
+        document.location.reload();
+      });
+      identity.on('logout', function () {
+        gate.hidden = false;
+      });
+    }
+
+    // The editor loads its settings from config.yml next to this page. Probe it
+    // directly so a missing or misserved file is named, rather than showing up
+    // as a spinner that never resolves.
+    var probe = 'not started';
+    fetch('config.yml', { cache: 'no-store' }).then(function (r) {
+      return r.text().then(function (body) {
+        probe = 'HTTP ' + r.status +
+          '\n  content-type: ' + (r.headers.get('content-type') || '(none)') +
+          '\n  length: ' + body.length +
+          '\n  begins: ' + JSON.stringify(body.slice(0, 70));
+      });
+    }).catch(function (err) {
+      probe = 'fetch failed: ' + (err && err.message ? err.message : String(err));
     });
 
-    identity.on('init', function (user) {
-      if (user) gate.hidden = true;
-    });
-    identity.on('login', function () {
-      gate.hidden = true;
-      document.location.reload();
-    });
-    identity.on('logout', function () {
-      gate.hidden = false;
-    });
+    function stuck() {
+      var t = document.body.innerText || '';
+      return t.indexOf('Loading configuration') !== -1 || t.trim() === '';
+    }
+
+    setTimeout(function () {
+      if (!stuck() && !window.__diag.length) return;
+
+      var report = [
+        'page        : ' + location.href,
+        'decap CMS   : ' + (window.CMS ? 'loaded' : 'DID NOT LOAD'),
+        'identity    : ' + (window.netlifyIdentity ? 'loaded' : 'DID NOT LOAD'),
+        'signed in   : ' + (window.netlifyIdentity && window.netlifyIdentity.currentUser()
+                              ? 'yes' : 'no'),
+        'config.yml  : ' + probe,
+        '',
+        window.__diag.length ? window.__diag.join('\n\n') : '(no JavaScript errors captured)'
+      ].join('\n');
+
+      var d = document.createElement('div');
+      d.id = 'diag';
+      d.innerHTML =
+        '<div class="in"><h2>The editor did not finish starting</h2>' +
+        '<p>Nothing is broken on the public website — this page only.</p>' +
+        '<p>Please send the text below to whoever set this up; it says exactly ' +
+        'what failed.</p><pre></pre>' +
+        '<p style="margin-top:18px"><button type="button" onclick="location.reload()" ' +
+        'style="font:inherit;font-weight:500;background:#5B7150;color:#FDFBF7;border:none;' +
+        'border-radius:2px;padding:12px 22px;cursor:pointer">Try again</button></p></div>';
+      d.querySelector('pre').textContent = report;
+      document.body.appendChild(d);
+    }, 9000);
   })();
 </script>
 </body>
