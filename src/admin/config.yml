@@ -1,10 +1,12 @@
 # Decap CMS — the editor the clinic's writers see at /admin/.
 #
 # publish_mode: editorial_workflow is the important line. Saving does NOT put
-# anything on the live site; it opens a pull request for review. Nothing
-# reaches www.allergylungclinic.com until someone approves it. Every page
-# carries Dr. Radhika's registration number, so publishing under her name is
-# hers to authorise.
+# anything on the live site; it opens a pull request, and the entry waits in
+# Draft or In review until someone publishes it deliberately. That is review,
+# not approval: main accepts any merge, so anyone with an account here can
+# publish their own article. Protect main on GitHub if the clinic wants a
+# second pair of eyes to be required. Every page carries Dr. Radhika's
+# registration number, so publishing under her name is hers to authorise.
 
 backend:
   name: git-gateway
