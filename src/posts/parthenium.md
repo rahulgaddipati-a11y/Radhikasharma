@@ -7,7 +7,6 @@ card_label: "Living in Hyderabad"
 card_summary: "It arrived in India in the 1950s in imported grain and now grows on every vacant plot. It is the commonest cause of plant dermatitis in the country, and it is badly under-diagnosed in people who work outdoors."
 byline: ""
 title: "Congress grass: why Parthenium causes a rash as well as sneezing"
-category: "Living in Hyderabad"
 updated: "18 July 2026"
 nutshell:
   - "<b>Parthenium hysterophorus</b> — congress grass, gajar ghas — arrived in India in the 1950s in imported grain and now grows on almost every vacant plot."

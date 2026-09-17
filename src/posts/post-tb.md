@@ -7,7 +7,6 @@ card_label: "Asthma & Lungs"
 card_summary: "Being cured of tuberculosis does not mean the lungs went back to normal. Post-TB lung disease is common, under-recognised and treatable — and it starts with a spirometry test nobody offered you."
 byline: ""
 title: "You finished TB treatment. Why are you still breathless?"
-category: "Asthma & Lungs"
 updated: "12 August 2026"
 nutshell:
   - "Being declared cured of tuberculosis means the infection is gone. It does not mean the lungs went back to normal."

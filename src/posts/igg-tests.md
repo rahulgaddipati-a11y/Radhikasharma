@@ -7,7 +7,6 @@ card_label: "Tests Explained"
 card_summary: "IgG food panels are sold widely in India and cause real harm through unnecessary food avoidance. What IgG actually measures, why every allergy body advises against these tests, and what genuinely diagnoses a food problem."
 byline: ""
 title: "The food intolerance blood test you paid for doesn't work. Here's why."
-category: "Tests Explained"
 updated: "2 September 2026"
 nutshell:
   - "IgG food panels test for an antibody that shows <b>exposure</b>, not intolerance. A positive result usually means you eat that food."

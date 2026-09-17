@@ -7,7 +7,6 @@ card_label: "Allergy"
 card_summary: "The question asked in almost every consultation, answered without contempt. What allergen immunotherapy does, how it differs in dose and evidence, and why it is reasonable to have tried other things first."
 byline: ""
 title: "Homeopathy, Ayurveda and allergy: an honest answer to the question everyone asks me"
-category: "Allergy"
 updated: "24 August 2026"
 nutshell:
   - "Most patients who reach this clinic have tried something else first. That is normal and nothing to apologise for."

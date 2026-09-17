@@ -7,7 +7,6 @@ card_label: "For Parents"
 card_summary: "On inhaled steroids, growth, and why a nebuliser in a clinic feels safer to parents than a small inhaler at home — when the opposite is closer to the truth."
 byline: ""
 title: "Your child has been nebulised three times this year. Should they be on a preventer?"
-category: "For Parents"
 updated: "30 July 2026"
 nutshell:
   - "Repeated nebulisation is a sign that something underneath is not being treated. It is rescue, not control."

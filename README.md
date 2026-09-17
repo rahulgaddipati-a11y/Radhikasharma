@@ -23,6 +23,34 @@ python3 build.py --serve    # builds, then serves it on http://localhost:8000
 
 No dependencies beyond the Python standard library.
 
+## The editor at /admin/
+
+Writers sign in at `https://www.allergylungclinic.com/admin/` with an email
+address and password, write in a normal editor, and save. **Saving does not
+publish.** `publish_mode: editorial_workflow` in `src/admin/config.yml` turns
+each save into a pull request for review; nothing reaches the live site until
+someone approves it. Every page carries Dr. Radhika's medical registration
+number, so publishing under her name stays hers to authorise.
+
+Turning it on, once, in Netlify:
+
+1. **Identity** → *Enable Identity*.
+2. **Identity → Registration** → set to **Invite only**, or anyone could sign
+   themselves up.
+3. **Identity → Services → Git Gateway** → *Enable Git Gateway*. This is what
+   lets the editor write to the repository without each writer having a GitHub
+   account.
+4. **Identity → Invite users** → add the marketing team's email addresses.
+
+If Netlify Identity is not offered on this site — Netlify has been retiring it
+for newer sites — the alternative is Decap's GitHub backend, which works the
+same way but requires each writer to have a GitHub account with access to the
+repository. Only the `backend:` block at the top of `config.yml` changes.
+
+The editor is `noindex`, disallowed in `robots.txt`, and linked from nowhere.
+It is also the only part of the site that loads third-party software: the
+public pages stay free of it, which is what the privacy notice promises.
+
 ## Writing a post
 
 Posts live in `src/posts/` as Markdown, one file per article. Adding a file is

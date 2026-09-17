@@ -7,7 +7,6 @@ card_label: "Living in Hyderabad"
 card_summary: "Damp raises indoor mould and dust mite, viral infections cluster, and thunderstorms can break pollen into pieces small enough to reach the lower airway. What actually helps, including the things that cost nothing."
 byline: ""
 title: "Monsoon asthma: why June to September is the hardest season for your lungs"
-category: "Living in Hyderabad"
 updated: "26 June 2026"
 nutshell:
   - "Four things change at once in the monsoon: indoor damp, mould, dust mite numbers, and circulating viral infections."

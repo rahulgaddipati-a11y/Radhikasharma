@@ -8,7 +8,6 @@ card_summary: "\"Dust allergy\" is the commonest self-diagnosis in India, and it
 byline: "Dr. Radhika Sharma · Last updated 8 September 2026 · 9 minute read"
 featured: true
 title: "Is it dust allergy, or something else?"
-category: "Living in Hyderabad"
 updated: "8 September 2026"
 nutshell:
   - "\"Dust allergy\" is a folk category, not a diagnosis. At least five different things hide behind it."

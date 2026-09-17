@@ -443,7 +443,7 @@ def write_extras(paths):
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n%s</urlset>\n' % urls)
 
     open(os.path.join(DIST, "robots.txt"), "w", encoding="utf-8").write(
-        "User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n" % SITE)
+        "User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: %s/sitemap.xml\n" % SITE)
 
     open(os.path.join(DIST, "site.webmanifest"), "w", encoding="utf-8").write(json.dumps({
         "name": CLINIC,
@@ -486,6 +486,11 @@ def main():
         print("  %-34s %6d  %s" % (post["path"], n, out))
 
     write_extras(written)
+
+    # the staff editor, served as-is (it is a React app, not a built page)
+    admin_src = os.path.join(SRC, "admin")
+    if os.path.isdir(admin_src):
+        shutil.copytree(admin_src, os.path.join(DIST, "admin"))
 
     # 404 gets the full shell, so a stray URL still shows the nav and the phone number
     render_404(layout)

@@ -456,6 +456,17 @@
     });
   })();
 
+  /* ---------------- editor invitations ----------------
+     Netlify Identity sends invite and password-reset links to the site root
+     with the token in the hash. Rather than load the Identity widget on every
+     public page -- which would put a third-party script in front of patients,
+     and make the privacy notice untrue -- forward those links to /admin/,
+     where the widget actually lives. */
+  if (/\b(invite_token|recovery_token|confirmation_token|email_change_token)=/
+        .test(location.hash) && location.pathname !== '/admin/') {
+    location.replace('/admin/' + location.hash);
+  }
+
   /* ---------------- legacy #/hash URLs -> real paths ----------------
      The first version of this site was a single page with hash routes.
      Anything already shared on WhatsApp still points at #/immunotherapy

@@ -1,0 +1,134 @@
+# Decap CMS — the editor the clinic's writers see at /admin/.
+#
+# publish_mode: editorial_workflow is the important line. Saving does NOT put
+# anything on the live site; it opens a pull request for review. Nothing
+# reaches www.allergylungclinic.com until someone approves it. Every page
+# carries Dr. Radhika's registration number, so publishing under her name is
+# hers to authorise.
+
+backend:
+  name: git-gateway
+  branch: main
+  commit_messages:
+    create: 'Post: {{slug}} (draft by {{author-name}})'
+    update: 'Post: update {{slug}} ({{author-name}})'
+    delete: 'Post: remove {{slug}} ({{author-name}})'
+    openAuthoring: 'Post: {{slug}} ({{author-name}})'
+
+publish_mode: editorial_workflow
+
+media_folder: src/assets/uploads
+public_folder: /assets/uploads
+
+collections:
+  - name: posts
+    label: Knowledge articles
+    label_singular: article
+    description: >
+      Articles published at /knowledge/. Everything here appears under
+      Dr. Radhika Sharma's name and medical registration, so drafts go to her
+      for approval before they are published.
+    folder: src/posts
+    extension: md
+    format: yaml-frontmatter
+    create: true
+    slug: '{{fields.slug}}'
+    summary: '{{title}}'
+    sortable_fields: [date, title]
+    view_groups:
+      - label: Category
+        field: card_label
+
+    fields:
+      - label: Title
+        name: title
+        widget: string
+        hint: The headline shown on the page and in Google results.
+
+      - label: Web address
+        name: slug
+        widget: string
+        pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lower case and hyphens only — for example dust-allergy']
+        hint: 'Becomes /knowledge/your-slug/. Do not change it once published — old links would break.'
+
+      - label: Publication date
+        name: date
+        widget: datetime
+        date_format: 'YYYY-MM-DD'
+        time_format: false
+        format: 'YYYY-MM-DD'
+        hint: Used for ordering and for search engines.
+
+      - label: Last updated
+        name: updated
+        widget: string
+        hint: 'Shown under the title, written out — for example 8 September 2026.'
+
+      - label: Byline
+        name: byline
+        widget: string
+        default: 'Dr. Radhika Sharma'
+        hint: Shown on the Knowledge index card.
+
+      - label: Search description
+        name: description
+        widget: text
+        pattern: ['^.{80,165}$', 'Aim for roughly 120–160 characters']
+        hint: >
+          The sentence Google shows beneath the title, and the one that appears
+          when the link is shared on WhatsApp. Around 150 characters.
+
+      - label: Category
+        name: card_label
+        widget: select
+        options: ['Allergy', 'Asthma & Lungs', 'Tests Explained', 'Living in Hyderabad', 'For Parents']
+
+      - label: Filter tags
+        name: tags
+        widget: select
+        multiple: true
+        options: [allergy, lungs, tests, hyderabad, parents]
+        hint: Which filter buttons this article appears under on the Knowledge page.
+
+      - label: Index summary
+        name: card_summary
+        widget: text
+        hint: The paragraph shown on the Knowledge index. Two or three sentences.
+
+      - label: Feature this article at the top?
+        name: featured
+        widget: boolean
+        required: false
+        default: false
+        hint: Only one article should be featured. If several are, the newest wins.
+
+      - label: In a nutshell
+        name: nutshell
+        widget: list
+        required: false
+        field: { label: Point, name: point, widget: string }
+        hint: The summary box at the top. Four or five short points.
+
+      - label: Buttons at the end
+        name: cta
+        widget: list
+        required: false
+        fields:
+          - { label: Label, name: label, widget: string }
+          - { label: Link, name: href, widget: string, default: '/book/' }
+          - { label: Style, name: style, widget: select, options: [solid, ghost], default: solid }
+
+      - label: Sources
+        name: sources
+        widget: list
+        required: false
+        field: { label: Reference, name: ref, widget: string }
+        hint: Guidelines or published research the article draws on.
+
+      - label: Article
+        name: body
+        widget: markdown
+        hint: >
+          Use Heading 2 for sections and Heading 3 beneath them. Plain prose
+          reads best — the site is written to sound like a doctor explaining
+          something, not like marketing copy.
