@@ -29,8 +29,9 @@ Writers sign in at `https://www.allergylungclinic.com/admin/` with an email
 address and password, write in a normal editor, and save. **Saving does not
 publish.** `publish_mode: editorial_workflow` in `src/admin/config.yml` turns
 each save into a pull request for review; nothing reaches the live site until
-someone approves it. Every page carries Dr. Radhika's medical registration
-number, so publishing under her name stays hers to authorise.
+an article is deliberately published. Every page carries Dr. Radhika's
+medical registration number, so publishing under her name stays hers to
+authorise.
 
 Turning it on, once, in Netlify:
 
@@ -40,7 +41,13 @@ Turning it on, once, in Netlify:
 3. **Identity → Services → Git Gateway** → *Enable Git Gateway*. This is what
    lets the editor write to the repository without each writer having a GitHub
    account.
-4. **Identity → Invite users** → add the marketing team's email addresses.
+4. **Identity → Emails → Invitation template** → point the link at
+   `{{ .SiteURL }}/admin/#invite_token={{ .Token }}`. The default template
+   links to the site root, where nothing is listening: the Identity widget is
+   loaded on `/admin/` and nowhere else, so an invitee lands on the home page
+   with no way to set a password. The **Recovery** template needs the same
+   change, or password resets dead-end in the same place.
+5. **Identity → Invite users** → add the marketing team's email addresses.
 
 If Netlify Identity is not offered on this site — Netlify has been retiring it
 for newer sites — the alternative is Decap's GitHub backend, which works the
@@ -50,6 +57,49 @@ repository. Only the `backend:` block at the top of `config.yml` changes.
 The editor is `noindex`, disallowed in `robots.txt`, and linked from nowhere.
 It is also the only part of the site that loads third-party software: the
 public pages stay free of it, which is what the privacy notice promises.
+
+## Day to day in the editor
+
+**Signing in.** `https://www.allergylungclinic.com/admin/`, one *Login with
+Netlify Identity* button, email and password. Nothing on the site links there,
+so it is worth a bookmark. If the page hangs, wait nine seconds: it prints what
+failed — whether the CMS loaded, whether Identity loaded, what `config.yml`
+returned — instead of spinning forever. That text is the thing to send on; a
+screenshot of a blank page says nothing.
+
+**What is editable.** Knowledge articles, and nothing else. The service pages,
+prices, contact details and the booking form live in `src/pages/*.html` and
+need a code change. A writer can publish an article without being able to
+reword the asthma page by accident.
+
+Most fields explain themselves in the editor. Two do not:
+
+- **Web address** becomes `/knowledge/that-slug/` for good. Changing it after
+  publication breaks every link anyone has already shared.
+- **Feature this article at the top** belongs to one article at a time. If
+  several carry it the newest wins, and the others quietly stop being
+  featured.
+
+Images are dragged into the body. They are stored in `src/assets/uploads/` and
+served from `/assets/uploads/`, which the build copies across whole.
+
+**Saving, and publishing.** Saving never touches the live site. Each article
+becomes a branch — `cms/posts/<slug>` — and a pull request, and moves across
+three columns in the editor: Draft, In review, Ready. Publishing merges the
+pull request; Netlify rebuilds, and the article is live a couple of minutes
+later.
+
+Those columns are a process, not a permission. Anyone invited can move their
+own article to Ready and publish it, because `main` accepts any merge. If
+approval is meant to be required rather than expected, protect `main` on
+GitHub with *require a pull request review before merging*: the Publish button
+then fails for anyone who cannot approve, and the article waits in its pull
+request until someone signs off.
+
+A reasonable first run: invite one person, have them write a throwaway article
+and leave it in Draft, and check that it shows up as an open pull request
+without anything appearing on the live site. That exercises Identity, Git
+Gateway and the workflow in one go, and nothing is at risk if a step is wrong.
 
 ## Writing a post
 
