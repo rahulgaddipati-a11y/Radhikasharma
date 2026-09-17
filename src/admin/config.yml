@@ -28,8 +28,7 @@ collections:
     label_singular: article
     description: >
       Articles published at /knowledge/. Everything here appears under
-      Dr. Radhika Sharma's name and medical registration, so drafts go to her
-      for approval before they are published.
+      Dr. Radhika Sharma's name and medical registration.
     folder: src/posts
     extension: md
     format: yaml-frontmatter
