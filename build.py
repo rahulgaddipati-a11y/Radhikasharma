@@ -365,12 +365,12 @@ def mark_nav(html, section):
 
 
 FEATURE_ART = ('<div class="art"><svg width="150" height="150" viewBox="0 0 150 150" '
-    'fill="none" aria-hidden="true"><circle cx="75" cy="75" r="52" stroke="#5B7150" '
-    'stroke-width="1" opacity=".5"/><circle cx="75" cy="75" r="34" stroke="#5B7150" '
-    'stroke-width="1" opacity=".7"/><circle cx="75" cy="75" r="16" fill="#5B7150" '
-    'opacity=".18"/><circle cx="46" cy="58" r="3" fill="#5B7150"/><circle cx="104" cy="63" '
-    'r="4" fill="#5B7150" opacity=".7"/><circle cx="92" cy="103" r="2.5" fill="#5B7150"/>'
-    '<circle cx="55" cy="98" r="3.5" fill="#5B7150" opacity=".6"/></svg></div>')
+    'fill="none" aria-hidden="true"><circle cx="75" cy="75" r="52" stroke="#006E7A" '
+    'stroke-width="1" opacity=".5"/><circle cx="75" cy="75" r="34" stroke="#006E7A" '
+    'stroke-width="1" opacity=".7"/><circle cx="75" cy="75" r="16" fill="#006E7A" '
+    'opacity=".18"/><circle cx="46" cy="58" r="3" fill="#006E7A"/><circle cx="104" cy="63" '
+    'r="4" fill="#006E7A" opacity=".7"/><circle cx="92" cy="103" r="2.5" fill="#006E7A"/>'
+    '<circle cx="55" cy="98" r="3.5" fill="#006E7A" opacity=".6"/></svg></div>')
 
 
 # The Knowledge filter buttons are built from the tags the articles actually
