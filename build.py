@@ -16,7 +16,7 @@ import os
 import re
 import shutil
 import sys
-from datetime import date
+from datetime import date, datetime
 
 SITE = "https://www.allergylungclinic.com"
 CLINIC = "Dr. Radhika's Allergy & Lung Clinic"
@@ -195,6 +195,26 @@ def load_posts():
                                "card_summary") if not post.get(k)]
         if missing:
             raise SystemExit("%s is missing: %s" % (path, ", ".join(missing)))
+
+        # The editor writes the publication date unquoted, so YAML hands it
+        # back as a date object, while the posts written by hand quote it and
+        # come back as a string. Sorting a mix of the two is a TypeError, and a
+        # date object cannot be serialised into the page's structured data
+        # either. One ISO string from here on, however the file was written.
+        stamp = post["date"]
+        if isinstance(stamp, datetime):
+            stamp = stamp.date()
+        if isinstance(stamp, date):
+            post["date"] = stamp.isoformat()
+        else:
+            stamp = str(stamp).strip()
+            try:
+                date.fromisoformat(stamp)
+            except ValueError:
+                raise SystemExit(
+                    "%s has a publication date this build cannot read: %r.\n"
+                    "It has to look like 2026-09-28." % (path, post["date"]))
+            post["date"] = stamp
 
         # The editor's description box is several lines tall, so a writer can
         # press Enter in it. That newline would otherwise be carried into the
