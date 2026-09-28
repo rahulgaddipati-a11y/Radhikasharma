@@ -45,6 +45,15 @@ PHYSICIAN = {
         "Fellowship in Interventional Pulmonology",
     ],
     "image": SITE + "/assets/portrait.webp",
+    # The same doctor is searched for under all of these words. Listing them
+    # here is a statement of what she treats, not a claim of extra services.
+    "knowsAbout": [
+        "Allergy testing", "Allergen immunotherapy", "Allergic rhinitis",
+        "Chronic urticaria", "Food allergy", "Drug allergy", "Atopic eczema",
+        "Asthma", "COPD", "Bronchiectasis", "Chronic cough",
+        "Post-tuberculosis lung disease", "Pulmonary function testing",
+        "Sleep-disordered breathing", "Smoking cessation",
+    ],
 }
 
 CLINIC_SCHEMA = {
@@ -67,12 +76,23 @@ CLINIC_SCHEMA = {
         "opens": "11:00",
         "closes": "18:00",
     }],
+    # Only services the site itself describes. A clinic's structured data is
+    # read as a claim about what it does, so it lists nothing the pages do not.
     "availableService": [
         {"@type": "MedicalTest", "name": "Skin prick allergy testing"},
         {"@type": "MedicalTest", "name": "Specific IgE blood testing"},
+        {"@type": "MedicalTest", "name": "Component-resolved allergy diagnostics"},
         {"@type": "MedicalTest", "name": "Spirometry with bronchodilator reversibility"},
+        {"@type": "MedicalTest", "name": "FeNO (exhaled nitric oxide) testing"},
+        {"@type": "MedicalTest", "name": "Six-minute walk test"},
+        {"@type": "MedicalTest", "name": "Drug and food allergy evaluation"},
         {"@type": "MedicalTherapy", "name": "Allergen immunotherapy"},
         {"@type": "MedicalTherapy", "name": "Smoking cessation programme"},
+        {"@type": "MedicalTherapy", "name": "Sleep apnoea and snoring assessment"},
+    ],
+    "areaServed": [
+        {"@type": "Place", "name": "Jubilee Hills, Hyderabad"},
+        {"@type": "City", "name": "Hyderabad"},
     ],
     "employee": PHYSICIAN,
 }
@@ -99,13 +119,14 @@ P = [
 
     ("/immunotherapy/", "immunotherapy",
      "Immunotherapy · " + CLINIC,
-     "Allergen immunotherapy in Hyderabad: the only treatment that changes the allergy rather than "
+     "Allergen immunotherapy in Jubilee Hills, Hyderabad: the only treatment that changes the allergy rather than "
      "masking it. Who it suits, what it involves, and when the answer is no.",
      "/immunotherapy/"),
 
     ("/asthma-lung/", "asthma-lung",
      "Asthma & Lung Disorders · " + CLINIC,
-     "Asthma, COPD, bronchiectasis and post-infective airway disease measured rather than guessed "
+     "Asthma, COPD, bronchiectasis and post-infective airway disease, seen by a chest specialist "
+     "in Jubilee Hills, Hyderabad. Measured rather than guessed "
      "at — consultant respiratory care in Jubilee Hills, Hyderabad.",
      "/asthma-lung/"),
 
