@@ -74,7 +74,8 @@ collections:
       - label: Search description
         name: description
         widget: text
-        pattern: ['^.{80,165}$', 'Aim for roughly 120–160 characters']
+        pattern: ['^[\s\S]{80,165}$',
+                  'it has to be between 80 and 165 characters long. Aim for about 150 — this one is outside that range']
         hint: >
           The sentence Google shows beneath the title, and the one that appears
           when the link is shared on WhatsApp. Around 150 characters.
@@ -83,13 +84,26 @@ collections:
         name: card_label
         widget: select
         options: ['Allergy', 'Asthma & Lungs', 'Tests Explained', 'Living in Hyderabad', 'For Parents']
+        hint: >
+          The small grey label printed above the title on the Knowledge index.
+          One only. This is what the article is about; the filter tags below
+          are a separate thing, and control which buttons it hides behind.
 
       - label: Filter tags
         name: tags
-        widget: select
-        multiple: true
-        options: [allergy, lungs, tests, hyderabad, parents]
-        hint: Which filter buttons this article appears under on the Knowledge page.
+        widget: list
+        field:
+          label: Tag
+          name: tag
+          widget: string
+          pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$',
+                    'a tag is lower case with hyphens instead of spaces — allergy, or living-well']
+        hint: >
+          The filter buttons this article appears under on the Knowledge page.
+          The ones in use are allergy, lungs, tests, hyderabad and parents —
+          type one of those exactly to join it. A tag nobody has used before
+          creates a new filter button, so check your spelling: allergies and
+          allergy would become two separate buttons.
 
       - label: Index summary
         name: card_summary
@@ -114,10 +128,29 @@ collections:
         name: cta
         widget: list
         required: false
+        hint: >
+          The buttons under the last paragraph, usually one to book and one to
+          read further. Leave it empty if the article does not need them; every
+          button you do add has to have all three parts filled in.
         fields:
-          - { label: Label, name: label, widget: string }
-          - { label: Link, name: href, widget: string, default: '/book/' }
-          - { label: Style, name: style, widget: select, options: [solid, ghost], default: solid }
+          - label: Label
+            name: label
+            widget: string
+            hint: 'The words on the button — for example Book an appointment.'
+          - label: Link
+            name: href
+            widget: string
+            hint: >
+              Where it goes. A page on this site starts and ends with a slash,
+              such as /book/ or /allergy-testing/. A full address is only for
+              somewhere else entirely.
+          - label: Style
+            name: style
+            widget: select
+            options: [solid, ghost]
+            hint: >
+              solid is the filled green button, for the main thing you want
+              read next. ghost is the outlined one, for anything after that.
 
       - label: Sources
         name: sources

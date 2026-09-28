@@ -196,6 +196,11 @@ def load_posts():
         if missing:
             raise SystemExit("%s is missing: %s" % (path, ", ".join(missing)))
 
+        # The editor's description box is several lines tall, so a writer can
+        # press Enter in it. That newline would otherwise be carried into the
+        # meta description and the structured data, where it means nothing.
+        post["description"] = " ".join(post["description"].split())
+
         # no "smarty": converting the storage format must not quietly restyle
         # the doctor's punctuation
         post["html"] = md_lib.markdown(
@@ -348,6 +353,44 @@ FEATURE_ART = ('<div class="art"><svg width="150" height="150" viewBox="0 0 150 
     '<circle cx="55" cy="98" r="3.5" fill="#5B7150" opacity=".6"/></svg></div>')
 
 
+# The Knowledge filter buttons are built from the tags the articles actually
+# carry. A tag nobody uses leaves no empty button behind, and a tag a writer
+# invents in the editor gets a button without anyone editing this file. The map
+# only exists for the five whose button says something other than the tag.
+TAG_LABELS = {
+    "allergy": "Allergy",
+    "lungs": "Asthma & Lungs",
+    "tests": "Tests Explained",
+    "hyderabad": "Living in Hyderabad",
+    "parents": "For Parents",
+}
+TAG_ORDER = ["allergy", "lungs", "tests", "hyderabad", "parents"]
+
+
+def tag_label(tag):
+    """The button text for a tag, made readable if it is a new one."""
+    if tag in TAG_LABELS:
+        return TAG_LABELS[tag]
+    words = tag.replace("-", " ").strip()
+    return words[:1].upper() + words[1:]
+
+
+def knowledge_filters(posts):
+    """The filter row: All, the five familiar tags in their usual order, then
+    anything new in alphabetical order so it cannot jump the queue."""
+    used = set()
+    for post in posts:
+        for tag in post.get("tags") or []:
+            used.add(tag)
+
+    out = ['<a href="/knowledge/" class="on" data-cat="all">All</a>']
+    for tag in [t for t in TAG_ORDER if t in used] + \
+               sorted(t for t in used if t not in TAG_LABELS):
+        out.append('<a href="/knowledge/" data-cat="%s">%s</a>'
+                   % (esc(tag), esc_text(tag_label(tag))))
+    return "\n        ".join(out)
+
+
 def knowledge_cards(posts):
     """The Knowledge index, built from the posts themselves.
 
@@ -474,7 +517,8 @@ def main():
         page_body = None
         if frag == "knowledge":
             page_body = open(os.path.join(PAGES, "knowledge.html"), encoding="utf-8") \
-                .read().replace("<!-- POSTS -->", knowledge_cards(posts))
+                .read().replace("<!-- POSTS -->", knowledge_cards(posts)) \
+                .replace("<!-- FILTERS -->", knowledge_filters(posts))
         out, n = render(layout, path, frag, title, desc, section, body=page_body)
         written.append(path)
         print("  %-34s %6d  %s" % (path, n, out))

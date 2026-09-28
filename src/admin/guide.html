@@ -153,18 +153,22 @@ doctor explaining something, not like marketing copy.</p>
   <tr><th>Byline</th><td>Shown on the Knowledge index card.</td></tr>
   <tr><th>Search description</th><td>The sentence Google shows beneath the
     title, and the one that appears when the link is shared on WhatsApp.
-    Roughly 120–160 characters; shorter or longer will be refused.</td></tr>
-  <tr><th>Category</th><td>Which of the five groups the article belongs to.</td></tr>
-  <tr><th>Filter tags</th><td>Which filter buttons the article appears under on
-    the Knowledge page. You can pick more than one.</td></tr>
+    <strong>Between 80 and 165 characters</strong> — about one and a half
+    lines. Anything longer is refused, because Google would cut it off
+    anyway.</td></tr>
+  <tr><th>Category</th><td>The small grey label above the title. One only, and
+    a different thing from the filter tags below it.</td></tr>
+  <tr><th>Filter tags</th><td>The filter buttons the article appears under.
+    Add as many as apply — and see below on inventing a new one.</td></tr>
   <tr><th>Index summary</th><td>The paragraph shown on the Knowledge index.
     Two or three sentences.</td></tr>
   <tr><th>Feature at the top</th><td>Lifts the article to the top of the
     Knowledge page.</td></tr>
   <tr><th>In a nutshell</th><td>Optional. The summary box at the top of the
     article — four or five short points.</td></tr>
-  <tr><th>Buttons at the end</th><td>Optional. Give every button you add a
-    label, or the article cannot be saved.</td></tr>
+  <tr><th>Buttons at the end</th><td>Optional, and empty to begin with. Every
+    button you add needs all three parts filled in: the words on it, where it
+    goes, and whether it is filled or outlined.</td></tr>
   <tr><th>Sources</th><td>Optional. Guidelines or published research the
     article draws on.</td></tr>
 </table>
@@ -177,6 +181,25 @@ doctor explaining something, not like marketing copy.</p>
   <p><strong>Only one article should be featured.</strong> If several are
   switched on, the newest one wins and the others quietly stop being featured —
   so switch the old one off when you promote a new one.</p>
+</div>
+
+<h3>Adding a filter tag that does not exist yet</h3>
+
+<p>The tags in use are <code>allergy</code>, <code>lungs</code>,
+<code>tests</code>, <code>hyderabad</code> and <code>parents</code>. Type one
+of those exactly and the article joins that filter button on the Knowledge
+page.</p>
+
+<p>You can also type a tag nobody has used before. The Knowledge page grows a
+new filter button for it by itself, next to the existing ones, the next time
+the site is built — no developer needed. The button is named after the tag,
+so <code>indoor-air</code> becomes a button reading <em>Indoor air</em>.</p>
+
+<div class="note">
+  <p>Because a new tag makes a new button, spelling counts.
+  <code>allergy</code> and <code>allergies</code> would become two separate
+  buttons splitting the same articles between them. Tags are lower case, with
+  hyphens instead of spaces.</p>
 </div>
 
 <h2 id="publishing">5. Saving, reviewing, publishing</h2>
@@ -232,8 +255,18 @@ spinning forever, the page will print a short report saying exactly what
 failed. Copy that text and send it to whoever looks after the site — it is far
 more useful than a screenshot of a blank page.</p>
 
-<p>If you are signed in but nothing saves, you have most likely missed a
-required field. Scroll to the top of the article and look for the red outline.</p>
+<p>If you are signed in but nothing saves, a field is failing its check.
+Scroll up and look for the red outline — the message beside it says what is
+wrong. The two that catch people most often:</p>
+
+<ul>
+  <li><strong>Search description</strong> — it has to be between 80 and 165
+    characters. Paste in a whole paragraph and it will refuse, because that is
+    longer than Google would ever show.</li>
+  <li><strong>Buttons at the end</strong> — if you added a button and left any
+    part of it blank, the article will not save until it is filled in or the
+    button is removed with the ✕.</li>
+</ul>
 
 <footer>
   This page is part of the editor and is not visible on the public website.
