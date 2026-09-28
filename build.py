@@ -53,6 +53,8 @@ PHYSICIAN = {
         "Asthma", "COPD", "Bronchiectasis", "Chronic cough",
         "Post-tuberculosis lung disease", "Pulmonary function testing",
         "Sleep-disordered breathing", "Smoking cessation",
+        "Pneumonia", "Bronchitis", "Interstitial lung disease",
+        "Pulmonary hypertension", "Pulmonary embolism", "Lung cancer screening",
     ],
 }
 
@@ -89,6 +91,8 @@ CLINIC_SCHEMA = {
         {"@type": "MedicalTherapy", "name": "Allergen immunotherapy"},
         {"@type": "MedicalTherapy", "name": "Smoking cessation programme"},
         {"@type": "MedicalTherapy", "name": "Sleep apnoea and snoring assessment"},
+        {"@type": "MedicalTest", "name": "Lung cancer screening"},
+        {"@type": "MedicalProcedure", "name": "Bronchoscopy"},
     ],
     "areaServed": [
         {"@type": "Place", "name": "Jubilee Hills, Hyderabad"},
